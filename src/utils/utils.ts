@@ -18,8 +18,12 @@ export function checkStringArrayMatch(stringArray: string[], targetString: strin
   return false
 }
 
-export function checkJobTitle(title: string): boolean {
-  return (
-    !checkStringArrayMatch(titleBlackList, title) && checkStringArrayMatch(titleWhiteList, title)
-  )
+export function checkStringToBlackAndWhiteLists(
+  title: string,
+  blackList: string[],
+  whiteList?: string[],
+): boolean {
+  return whiteList
+    ? !checkStringArrayMatch(blackList, title) && checkStringArrayMatch(whiteList, title)
+    : !checkStringArrayMatch(blackList, title)
 }

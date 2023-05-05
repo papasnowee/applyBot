@@ -1,7 +1,8 @@
 import { Builder, By, WebDriver, WebElement } from 'selenium-webdriver'
 import chrome from 'selenium-webdriver/chrome'
 
-import { titleBlackList, titleWhiteList } from './lists/lists'
+import { companyBlackList, titleBlackList, titleWhiteList } from './lists/lists'
+import { checkStringToBlackAndWhiteLists } from './utils/utils'
 
 async function login(driver: WebDriver) {
   driver.findElement(By.id('username')).sendKeys('jilkinalexandr@gmail.com')
@@ -30,27 +31,32 @@ async function openLinkedin() {
 }
 
 async function scrollJobList(driver: WebDriver, element: WebElement) {
-  await driver.executeScript('arguments[0].scroll(0, 1000);', element)
+  await driver.executeScript('arguments[0].scroll(0, 1200);', element)
   await driver.sleep(1000)
-  await driver.executeScript('arguments[0].scroll(0, 2000);', element)
+  await driver.executeScript('arguments[0].scroll(0, 2400);', element)
   await driver.sleep(1000)
-  await driver.executeScript('arguments[0].scroll(0, 3000);', element)
+  await driver.executeScript('arguments[0].scroll(0, 3600);', element)
   await driver.sleep(1000)
   await driver.executeScript('arguments[0].scroll(0, 0);', element)
   await driver.sleep(1000)
 }
 
-function checkJobTitle(title: string): boolean {
-  return (
-    titleBlackList.find((item) => title.includes(item)) === undefined &&
-    titleWhiteList.find((item) => title.includes(item)) !== undefined
-  )
-}
-
 async function applyJob(driver: WebDriver, jobElement: WebElement) {
   const jobTitle = await jobElement.findElement(By.css('.job-card-list__title'))
-  const text = await (jobTitle as WebElement).getText()
-  const isTitleValid = checkJobTitle(text)
+  const text = await jobTitle.getText()
+
+  const isTitleValid = checkStringToBlackAndWhiteLists(text, titleBlackList, titleWhiteList)
+  if (isTitleValid) {
+    const companyNameElement = await jobElement.findElement(
+      By.className('job-card-container__company-name'), // css instead of className
+    )
+    const companyName = await companyNameElement.getText()
+    const isCompanyValid = checkStringToBlackAndWhiteLists(companyName, companyBlackList)
+
+    if (isCompanyValid) {
+      console.log('rabotaet')
+    }
+  }
 }
 
 const Run = async function () {
@@ -72,11 +78,10 @@ const Run = async function () {
   //   const jobTitle = await job.findElement(By.css('.job-card-list__title'))
 
   //   const text = await (jobTitle as WebElement).getText()
-  //   console.log({ text })
   // })
   applyJob(driver, jobList[0])
 }
 
 Run()
 
-console.log('Hello world')
+console.log('Run!')
