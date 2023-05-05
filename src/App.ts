@@ -1,7 +1,7 @@
 import { Builder, By, WebDriver, WebElement } from 'selenium-webdriver'
 import chrome from 'selenium-webdriver/chrome'
 
-import { waitAfterCallback } from './utils'
+import { titleBlackList, titleWhiteList } from './lists/lists'
 
 async function login(driver: WebDriver) {
   driver.findElement(By.id('username')).sendKeys('jilkinalexandr@gmail.com')
@@ -40,6 +40,19 @@ async function scrollJobList(driver: WebDriver, element: WebElement) {
   await driver.sleep(1000)
 }
 
+function checkJobTitle(title: string): boolean {
+  return (
+    titleBlackList.find((item) => title.includes(item)) === undefined &&
+    titleWhiteList.find((item) => title.includes(item)) !== undefined
+  )
+}
+
+async function applyJob(driver: WebDriver, jobElement: WebElement) {
+  const jobTitle = await jobElement.findElement(By.css('.job-card-list__title'))
+  const text = await (jobTitle as WebElement).getText()
+  const isTitleValid = checkJobTitle(text)
+}
+
 const Run = async function () {
   const driver = await openLinkedin()
   // login(driver)
@@ -54,13 +67,14 @@ const Run = async function () {
   await scrollJobList(driver, jobsListDiv)
 
   const jobList = await driver.findElements(By.css('.scaffold-layout__list-container li'))
-  await jobList.forEach(async (job) => {
-    const jobTitle = await job.findElement(By.css('.job-card-list__title')).catch((err) => {
-      console.log({ err })
-    })
-    // const text = await jobTitle.getText()
-    // console.log({ text })
-  })
+  // jobList.forEach(async (job) => {
+
+  //   const jobTitle = await job.findElement(By.css('.job-card-list__title'))
+
+  //   const text = await (jobTitle as WebElement).getText()
+  //   console.log({ text })
+  // })
+  applyJob(driver, jobList[0])
 }
 
 Run()

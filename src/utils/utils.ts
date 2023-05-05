@@ -1,3 +1,5 @@
+import { titleBlackList, titleWhiteList } from '../lists/lists'
+
 export function waitAfterCallback(callback: () => any, time: number) {
   return new Promise((resolve) => {
     callback()
@@ -5,4 +7,19 @@ export function waitAfterCallback(callback: () => any, time: number) {
       resolve('')
     }, time + (0.5 - Math.random()) * 150)
   })
+}
+
+export function checkStringArrayMatch(stringArray: string[], targetString: string) {
+  for (let i = 0; i < stringArray.length; i++) {
+    if (targetString.toLowerCase().indexOf(stringArray[i].toLowerCase()) !== -1) {
+      return true
+    }
+  }
+  return false
+}
+
+export function checkJobTitle(title: string): boolean {
+  return (
+    !checkStringArrayMatch(titleBlackList, title) && checkStringArrayMatch(titleWhiteList, title)
+  )
 }
