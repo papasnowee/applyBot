@@ -41,22 +41,129 @@ async function scrollJobList(driver: WebDriver, element: WebElement) {
   await driver.sleep(1000)
 }
 
-async function applyJob(driver: WebDriver, jobElement: WebElement) {
-  const jobTitle = await jobElement.findElement(By.css('.job-card-list__title'))
-  const text = await jobTitle.getText()
+async function clickSkillsButton(driver: WebDriver) {
+  //click on Skills button
+  const skillsButton = await driver
+    .findElement(By.className('jobs-unified-top-card__job-insight-text-button'))
+    .catch((err) => console.log('no skills button', err))
+  if (!skillsButton) return false
 
-  const isTitleValid = checkStringToBlackAndWhiteLists(text, titleBlackList, titleWhiteList)
-  if (isTitleValid) {
-    const companyNameElement = await jobElement.findElement(
-      By.className('job-card-container__company-name'), // css instead of className
+  await skillsButton.click()
+
+  return true
+}
+
+async function createTextArrayFromElementsList(
+  elementArray: WebElement[],
+  selector: string,
+): Promise<string[] | void> {
+  return await Promise.all(
+    elementArray.map(async (element) => {
+      const elementWithText = await element.findElement(By.css(selector))
+      const text = await elementWithText.getText()
+      return text
+    }),
+  ).catch((err) => {
+    console.log('createTextArrayFromElementsList:', err)
+  })
+}
+
+async function checkSkillsStepByStep(skillsElement: WebElement[]) {
+  let result = 'maybe'
+
+  const stringSkillArray = await createTextArrayFromElementsList(skillsElement, '[aria-label]')
+  console.log({ stringSkillArray })
+
+  const resultsArr = []
+  // case 1 frameworks
+  function checkForFramework() {}
+
+  // if (i < scrollJobList.length)
+  //   await checkSkill(skillsElement[i], i)
+  //     checkSkillsStepByStep(skillsElement, i + 1)
+  //   }
+
+  /**
+   * нейтральные скилы это скилы которые не учтены в моих листах
+   * 1 вариант: много - болше половины front скиллов. Тогда мейби
+   * 2 вариант - меньше половины фронт скиллов и есть нейтральные скиллы, тогда мейби
+   * 3 - есть ключевой скилл как React и нет вообще плохих скиллов, тогда yes
+   * 4 есть плохие скилы и ключевые скиллы?? мейби
+   * есть плохие и нет ключевых  - no
+   *
+   */
+  return result
+}
+
+async function checkSkills(driver: WebDriver): Promise<'no' | 'yes' | 'maybe'> {
+  const isClicked = clickSkillsButton(driver)
+  if (!isClicked) return 'maybe'
+
+  await driver.sleep(2000)
+  const skillsElements = await driver
+    .findElements(
+      By.className('job-details-skill-match-status-list__matched-skill text-body-small'),
     )
-    const companyName = await companyNameElement.getText()
-    const isCompanyValid = checkStringToBlackAndWhiteLists(companyName, companyBlackList)
+    .catch((err) => {
+      console.log('no skill li elements', err)
+    })
+  if (!skillsElements) return 'maybe'
 
-    if (isCompanyValid) {
-      console.log('rabotaet')
-    }
-  }
+  await checkSkillsStepByStep(skillsElements)
+
+  return 'yes'
+}
+
+async function getTitleText(jobElement: WebElement) {
+  const jobTitle = await jobElement.findElement(By.css('.job-card-list__title')).catch(() => {
+    console.log({ err: '.job-card-list__title' })
+  })
+  if (!jobTitle) return
+  const text = await jobTitle.getText().catch(() => {
+    console.log({ err: 'get text from job Title' })
+  })
+
+  return text
+}
+
+async function checkTitle(jobElement: WebElement): Promise<boolean> {
+  const text = await getTitleText(jobElement)
+  if (!text) return false
+  return checkStringToBlackAndWhiteLists(text, titleBlackList, titleWhiteList)
+}
+
+async function checkCompany(jobElement: WebElement) {
+  const companyNameElement = await jobElement
+    .findElement(By.className('job-card-container__company-name'))
+    .catch(() => {
+      console.log({ err: 'job-card-container__company-name' })
+    })
+  if (!companyNameElement) return false
+  const companyName = await companyNameElement.getText()
+  const isCompanyValid = checkStringToBlackAndWhiteLists(companyName, companyBlackList)
+  return isCompanyValid
+}
+
+async function applyJob(driver: WebDriver, jobElement: WebElement, number: number) {
+  const isTitleValid = await checkTitle(jobElement)
+  if (!isTitleValid) return
+
+  const isCompanyValid = await checkCompany(jobElement)
+  if (!isCompanyValid) return
+
+  await jobElement.click().catch(() => {
+    console.log({ err: 'click job element error' })
+  })
+  await driver.sleep(2500)
+
+  // was that applied?
+  let isThereApplyButton = await driver
+    .findElement(By.className('jobs-apply-button'))
+    .catch((err) => {
+      console.log('there is no jobs apply button', number)
+    })
+  if (!isThereApplyButton) return
+  checkSkills(driver)
 }
 
 const Run = async function () {
@@ -72,16 +179,37 @@ const Run = async function () {
 
   await scrollJobList(driver, jobsListDiv)
 
-  const jobList = await driver.findElements(By.css('.scaffold-layout__list-container li'))
-  // jobList.forEach(async (job) => {
+  const jobList = await driver.findElements(
+    By.css('.scaffold-layout__list-container .jobs-search-results__list-item'),
+  )
 
-  //   const jobTitle = await job.findElement(By.css('.job-card-list__title'))
+  function applyJobs(driver: WebDriver, jobList: WebElement[], i: number, currentScroll: number) {
+    if (i < 5)
+      applyJob(driver, jobList[i], i).then(async () => {
+        await driver.executeScript(`arguments[0].scroll(0, ${currentScroll});`, jobsListDiv)
+        applyJobs(driver, jobList, i + 1, currentScroll + 163)
+      })
+  }
 
-  //   const text = await (jobTitle as WebElement).getText()
-  // })
-  applyJob(driver, jobList[0])
+  applyJobs(driver, jobList, 0, 163)
+  // await applyJob(driver, jobList[10], 10)
+  // await applyJob(driver, jobList[11], 11)
+  // await applyJob(driver, jobList[12], 12)
+  // await applyJob(driver, jobList[13], 13)
 }
 
 Run()
 
 console.log('Run!')
+
+// const asyncF = (i: number) => {
+//   if (i < 10) console.log(i)
+//   new Promise<number>((resolve) => {
+//     setTimeout(() => {
+//       resolve(i)
+//     }, 1000)
+//   }).then((i: number) => {
+//     asyncF(i + 1)
+//   })
+// }
+// asyncF(0)

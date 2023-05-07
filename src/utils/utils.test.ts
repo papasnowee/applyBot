@@ -1,6 +1,6 @@
-import { checkStringToBlackAndWhiteLists } from './utils'
+import { checkArrayToSubstring, checkStringToBlackAndWhiteLists } from './utils'
 
-const whiteList = ['front-end', 'frontend', 'front end']
+const whiteList = ['front-end', 'frontend', 'front end', ['ui', 'engineer']]
 const blackList = ['fullstack']
 
 describe('Utils checkJobTitle:', () => {
@@ -23,5 +23,22 @@ describe('Utils checkJobTitle:', () => {
     return expect(
       checkStringToBlackAndWhiteLists('Front-end developer/fullstack', blackList, whiteList),
     ).toBe(false)
+  })
+  test('positive scenario with two words:', () => {
+    return expect(checkStringToBlackAndWhiteLists('ui senior engineer', blackList, whiteList)).toBe(
+      true,
+    )
+  })
+  test('negative scenario with 1 words, but needed 2:', () => {
+    return expect(checkStringToBlackAndWhiteLists('ui senior', blackList, whiteList)).toBe(false)
+  })
+})
+
+describe('Utils checkArrayToSubstring: ', () => {
+  test('negative scenario checkArrayToSubstring:', () => {
+    return expect(checkArrayToSubstring('react', ['1rect1', 'reacwwt', 'sdf reac t'])).toBe(false)
+  })
+  test('positive scenario checkArrayToSubstring:', () => {
+    return expect(checkArrayToSubstring('react', ['1react1', 'reacwwt', 'sdf reac t'])).toBe(true)
   })
 })

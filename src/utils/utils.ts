@@ -1,5 +1,3 @@
-import { titleBlackList, titleWhiteList } from '../lists/lists'
-
 export function waitAfterCallback(callback: () => any, time: number) {
   return new Promise((resolve) => {
     callback()
@@ -9,10 +7,20 @@ export function waitAfterCallback(callback: () => any, time: number) {
   })
 }
 
-export function checkStringArrayMatch(stringArray: string[], targetString: string) {
+export function checkStringArrayMatch(stringArray: (string | string[])[], targetString: string) {
   for (let i = 0; i < stringArray.length; i++) {
-    if (targetString.toLowerCase().indexOf(stringArray[i].toLowerCase()) !== -1) {
-      return true
+    if (typeof stringArray[i] === 'object') {
+      let isIncludedAllWords = true
+      for (let j = 0; j < stringArray[i].length; j++) {
+        if (!checkStringArrayMatch([stringArray[i][j]], targetString)) {
+          isIncludedAllWords = false
+        }
+      }
+      if (isIncludedAllWords) return true
+    } else {
+      if (targetString.toLowerCase().indexOf((stringArray[i] as string).toLowerCase()) !== -1) {
+        return true
+      }
     }
   }
   return false
@@ -21,9 +29,16 @@ export function checkStringArrayMatch(stringArray: string[], targetString: strin
 export function checkStringToBlackAndWhiteLists(
   title: string,
   blackList: string[],
-  whiteList?: string[],
+  whiteList?: (string | string[])[],
 ): boolean {
   return whiteList
     ? !checkStringArrayMatch(blackList, title) && checkStringArrayMatch(whiteList, title)
     : !checkStringArrayMatch(blackList, title)
+}
+
+export function checkArrayToSubstring(substring: string, array: string[]) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i].toLowerCase().indexOf(substring.toLowerCase()) !== -1) return true
+  }
+  return false
 }
