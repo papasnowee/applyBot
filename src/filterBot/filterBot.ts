@@ -57,7 +57,7 @@ export async function filterJobs() {
             console.log('can not find element: .scaffold-layout__list-container .jobs-search-results__list-item'),
           )
         })
-      await scrollJobList(driver, jobsListDiv)
+      // await scrollJobList(driver, jobsListDiv) // скролим пока руками, починить?
       if (jobList) decorateJobs(driver, jobList, 163, jobsListDiv)
     }
   }
