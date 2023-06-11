@@ -1,0 +1,1 @@
+export { openWindow } from './openWindow'

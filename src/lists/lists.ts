@@ -1,9 +1,12 @@
 export const titleBlackList = [
+  'android',
   'support',
   'fullstack',
   'full stack',
+  'full-stack',
+  'manager',
   'principle',
-  'stuff',
+  'staff',
   'c++',
   'python',
   'c#',
@@ -11,22 +14,27 @@ export const titleBlackList = [
   'tech lead',
   'designer',
   'drupal',
-
   //todo IOS engineer
 ]
 
 export const titleWhiteList = [
+  'KTek Resourcing',
   'front end',
   'front-end',
   'frontend',
   'react',
   'developer',
-  'dev',
   ['ui', 'engineer'],
   ['software', 'engineer'],
+  ['mobile', 'engineer'],
+  ['mobile', 'developer'],
 ]
 
 export const companyBlackList = [
+  'Dunhill Professional Search & Government Solutions',
+  'Skyrocket Ventures',
+  'GrowthDay', // coach company
+  'Tiger Analytics',
   'CyberCoders',
   'Diverse Lynx',
   'Info Way Solutions',
@@ -54,9 +62,9 @@ export const companyBlackList = [
   'E-IT',
 ]
 
-export const keyFrontendWords = ['react', 'redux', 'mobx', 'styled-components']
+export const keyFrontendWords = ['react', 'redux', 'mobx', 'styled-components', 'react native']
 
-export const fullStackWords = ['java ', ' java', 'spring', 'python', 'c#', '.net']
+export const fullStackWords = ['java ', ' java', 'spring', 'python', 'c#', '.net', 'sql', 'torch']
 
 export const frontendWords = [
   'css',
@@ -69,10 +77,26 @@ export const frontendWords = [
   'web',
   'graph',
   'next',
-  'webpack',
+  'ui',
+  'ux',
+  'figma',
+  'jest',
+  'angular',
+  'vue',
+  'mobx',
+  'responsive',
+  'sass',
+  'bootstrap',
+  'react',
+  'user experience',
+  'user interface',
+  'ajax',
 ]
 
 // если есть любое из bad слов и при этом нет good слова , то это скиллы явно не про react разраба
-export const frameWorkWords = [
-  { good: 'react', bad: ['angular', 'vuejs', 'vue.js', 'vue js', 'vue'] },
-]
+export const frameWorkWords = {
+  good: ['react'],
+  bad: ['angular', 'vuejs', 'vue.js', 'vue js', 'vue'],
+}
+
+export const answerList = [{ questionWords: ['city'], answer: 'Sacramento, California, United States' }]

@@ -1,0 +1,1 @@
+export { checkCompany } from './checkCompany'

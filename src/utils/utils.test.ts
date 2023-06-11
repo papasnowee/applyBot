@@ -1,4 +1,4 @@
-import { checkArrayToSubstring, checkStringToBlackAndWhiteLists } from './utils'
+import { checkArrayToSubstring, checkStringToBlackAndWhiteLists, checkWeb } from './utils'
 
 const whiteList = ['front-end', 'frontend', 'front end', ['ui', 'engineer']]
 const blackList = ['fullstack']
@@ -42,3 +42,26 @@ describe('Utils checkArrayToSubstring: ', () => {
     return expect(checkArrayToSubstring('react', ['1react1', 'reacwwt', 'sdf reac t'])).toBe(true)
   })
 })
+describe('Utils checkWeb: ', () => {
+  test('negative scenario checkWeb:', () => {
+    return expect(
+      checkWeb([
+        'angular',
+        'react',
+        'java',
+        'rest',
+        'c#',
+        'system design',
+        'some',
+        'sadfsdf',
+        'asdfsdf',
+      ]),
+    ).toBe(false)
+  })
+  test('positive scenario checkWebTechnologies:', () => {
+    return expect(checkWeb(['webpack', 'web technologies', 'react', 'java', 'sql'])).toBe(true)
+  })
+})
+
+
+

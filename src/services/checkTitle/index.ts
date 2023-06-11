@@ -1,0 +1,1 @@
+export { checkTitle } from './checkTitle'
