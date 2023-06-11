@@ -10,12 +10,12 @@ const { By } = require('selenium-webdriver')
 
 async function coloreTitleRed(driver: WebDriver, jobElement: WebElement) {
   const jobTitle = await jobElement.findElement(By.css('.job-card-list__title')).catch(() => {
-    console.log({ err: 'can not find element: .job-card-list__title' })
+    console.log({ err: 'can not find element: .job-card-list__title, function coloreTitleRed' })
   })
   if (jobTitle) driver.executeScript("arguments[0].style.color = 'red';", jobTitle)
 }
 
-async function decorateJob(driver: WebDriver, jobElement: WebElement, number: number) {
+async function decorateJob(driver: WebDriver, jobElement: WebElement) {
   const isTitleValid = await checkTitleForBlack(jobElement)
   if (!isTitleValid) {
     coloreTitleRed(driver, jobElement)
@@ -29,17 +29,11 @@ async function decorateJob(driver: WebDriver, jobElement: WebElement, number: nu
   // checkSkills(driver)
 }
 
-async function decorateJobs(
-  driver: WebDriver,
-  jobList: WebElement[],
-  i: number,
-  currentScroll: number,
-  jobsListDiv: WebElement,
-) {
-  if (i < jobList.length) {
-    await decorateJob(driver, jobList[i], i)
-    await driver.executeScript(`arguments[0].scroll(0, ${currentScroll});`, jobsListDiv)
-    decorateJobs(driver, jobList, i + 1, currentScroll + 163, jobsListDiv)
+async function decorateJobs(driver: WebDriver, jobList: WebElement[], currentScroll: number, jobsListDiv: WebElement) {
+  for (let i = 0; i < jobList.length; i++) {
+    await decorateJob(driver, jobList[i]).catch(() => {
+      console.log('decorate job something went wrong')
+    })
   }
 }
 
@@ -52,23 +46,19 @@ export async function filterJobs() {
 
   const profileButton = await driver.findElement(By.id('ember13')).catch(() => console.log('не найдена кнопка профиля'))
 
-  // await scrollJobList(driver, jobsListDiv)
-
-  const jobList = await driver
-    .findElements(By.css('.scaffold-layout__list-container .jobs-search-results__list-item'))
-    .catch(() => {
-      console.log(console.log('can not find element: .scaffold-layout__list-container .jobs-search-results__list-item'))
-    })
-
-  if (jobList && profileButton) {
-    console.log('мы на месте')
+  if (profileButton) {
     while (true) {
       const rl = readline.createInterface({ input, output })
-
       const answer = await rl.question('Proceed?')
-
-      console.log(`Thank you for your valuable feedback: ${answer}`)
-      decorateJobs(driver, jobList, 0, 163, jobsListDiv)
+      const jobList = await driver
+        .findElements(By.css('.scaffold-layout__list-container .jobs-search-results__list-item'))
+        .catch(() => {
+          console.log(
+            console.log('can not find element: .scaffold-layout__list-container .jobs-search-results__list-item'),
+          )
+        })
+      await scrollJobList(driver, jobsListDiv)
+      if (jobList) decorateJobs(driver, jobList, 163, jobsListDiv)
     }
   }
 }
