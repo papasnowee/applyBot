@@ -4,11 +4,11 @@ import { titleBlackList, titleWhiteList } from '../../lists/lists'
 
 export async function getTitleText(jobElement: WebElement) {
   const jobTitle = await jobElement.findElement(By.css('.job-card-list__title')).catch(() => {
-    console.log({ err: '.job-card-list__title' })
+    console.log({ err: 'can not find element: .job-card-list__title' })
   })
   if (!jobTitle) return
   const text = await jobTitle.getText().catch(() => {
-    console.log({ err: 'get text from job Title' })
+    console.log({ err: 'can not find element: get text from job Title' })
   })
 
   return text
