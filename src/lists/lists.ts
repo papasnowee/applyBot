@@ -1,24 +1,4 @@
-export const titleBlackList = [
-  'android',
-  'support',
-  'fullstack',
-  'full stack',
-  'full-stack',
-  'manager',
-  'principle',
-  'staff',
-  'c++',
-  'python',
-  'c#',
-  '.net',
-  'tech lead',
-  'designer',
-  'drupal',
-  //todo IOS engineer
-]
-
 export const titleWhiteList = [
-  'KTek Resourcing',
   'front end',
   'front-end',
   'frontend',
@@ -30,7 +10,51 @@ export const titleWhiteList = [
   ['mobile', 'developer'],
 ]
 
+export const titleBlackList = [
+  'solution',
+  'Motor',
+  'learning',
+  'database',
+  'cloud',
+  'escalation engineer',
+  'compiler engineer',
+  'QA engineer',
+  'Embedded',
+  'solidity',
+  'security',
+  'data',
+  'swift',
+  'architect',
+  'android',
+  'support',
+  'fullstack',
+  'full stack',
+  'full-stack',
+  'manager',
+  'principle',
+  'principal',
+  'staff',
+  'c++',
+  'python',
+  'c#',
+  '.net',
+  'tech lead',
+  'designer',
+  'drupal',
+  'IOS developer',
+  'Firmware Engineer',
+  'system engineer',
+  'golang',
+  'Infrastructure',
+  'Engineer in Test',
+  'Advocate',
+  //todo IOS engineer
+]
+
 export const companyBlackList = [
+  'KTek Resourcing',
+  'Braintrust',
+  'Infobahn Softworld Inc',
   'Dunhill Professional Search & Government Solutions',
   'Skyrocket Ventures',
   'GrowthDay', // coach company
