@@ -11,6 +11,8 @@ export const titleWhiteList = [
 ]
 
 export const titleBlackList = [
+  'kotlin',
+  'angular',
   'solution',
   'Motor',
   'learning',
@@ -52,6 +54,11 @@ export const titleBlackList = [
 ]
 
 export const companyBlackList = [
+  'Invitation Homes',
+  'voxel',
+  'Wells Fargo',
+  'Piper Companies',
+  'rivian',
   'KTek Resourcing',
   'Braintrust',
   'Infobahn Softworld Inc',
