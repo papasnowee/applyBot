@@ -54,9 +54,8 @@ export const titleBlackList = [
 ]
 
 export const companyBlackList = [
-  'Invitation Homes',
-  'voxel',
-  'Wells Fargo',
+  'Terminus',
+  'ProFocus Technology',
   'Piper Companies',
   'rivian',
   'KTek Resourcing',
