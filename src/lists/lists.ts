@@ -11,6 +11,8 @@ export const titleWhiteList = [
 ]
 
 export const titleBlackList = [
+  'backend',
+  'devops',
   'kotlin',
   'angular',
   'solution',
