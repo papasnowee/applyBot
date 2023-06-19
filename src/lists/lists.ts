@@ -50,12 +50,15 @@ export const titleBlackList = [
   'system engineer',
   'golang',
   'Infrastructure',
+  'automation testing',
   'Engineer in Test',
+  'Automation Test',
   'Advocate',
   //todo IOS engineer
 ]
 
 export const companyBlackList = [
+  'walmart',
   'Terminus',
   'ProFocus Technology',
   'Piper Companies',
