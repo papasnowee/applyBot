@@ -11,6 +11,7 @@ export const titleWhiteList = [
 ]
 
 export const titleBlackList = [
+  'ai engineer',
   'backend',
   'devops',
   'kotlin',
@@ -54,6 +55,7 @@ export const titleBlackList = [
   'Engineer in Test',
   'Automation Test',
   'Advocate',
+  'ios engineer',
   //todo IOS engineer
 ]
 
