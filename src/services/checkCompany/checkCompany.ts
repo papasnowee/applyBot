@@ -4,7 +4,8 @@ import { companyBlackList } from '../../lists/lists'
 
 export async function checkCompany(jobElement: WebElement) {
   const companyNameElement = await jobElement
-    .findElement(By.className('job-card-container__company-name'))
+    // .findElement(By.className('job-card-container__company-name'))
+    .findElement(By.className('job-card-container__primary-description'))
     .catch(() => {
       console.log({ err: 'job-card-container__company-name' })
     })
